@@ -62,10 +62,14 @@ pipeline {
         }
       }
       stage('Component test') {
-          when not { branch 'dev/*' }
-          steps {
-            sh 'ci/component-test.sh'
+        when {
+          not {
+            branch 'dev/*'
           }
+        }
+        steps {
+          sh 'ci/component-test.sh'
+        }
       }
   }
   post {
