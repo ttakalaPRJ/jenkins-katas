@@ -46,7 +46,8 @@ pipeline {
             junit 'app/build/test-results/test/TEST-*.xml'
           }
         }
-        stage('somestage') {
+      }
+      stage('somedockerstage') {
           environment {
             DOCKERCREDS = credentials('docker_login') //use the credentials just created in this stage
           }
@@ -57,7 +58,6 @@ pipeline {
             sh 'ci/push-docker.sh'
           }
         }
-      }
     }
   }
   post {
