@@ -1,7 +1,7 @@
 pipeline {
   agent any
   environment {
-        docker_username = 'terotakala'
+    docker_username = 'terotakala'
   }
   stages {
     stage('Clone Down') {
@@ -30,7 +30,6 @@ pipeline {
           steps {
             unstash 'code'
             sh 'ci/build-app.sh'
-            stash name: 'code', excludes: '.git'
             archiveArtifacts 'app/build/libs/'
           }
         }
@@ -48,17 +47,15 @@ pipeline {
         }
       }
     }
-    stage('somedockerstage') {
+      stage('Push app') {
         environment {
-          DOCKERCREDS = credentials('docker_login') //use the credentials just created in this stage
+            DOCKERCREDS = credentials('docker_login')
         }
         steps {
-          unstash 'code' //unstash the repository code
-          sh 'ci/build-docker.sh'
-          sh 'echo "$DOCKERCREDS_PSW" | docker login -u "$DOCKERCREDS_USR" --password-stdin' //login to docker hub with the credentials above
-          sh 'ci/push-docker.sh'
+            sh 'echo "$DOCKERCREDS_PSW" | docker login -u "$DOCKERCREDS_USR" --password-stdin'
+            sh 'ci/push-docker.sh'
         }
-    }
+      }
   }
   post {
     cleanup {
